@@ -25,4 +25,19 @@ package object Comete {
         min_p(f, m1, max, prec)         // descartar tercio izquierdo
     }
   }
+
+  //borrador funcion integrante B sin logica para que rhoCMT_Gen se pueda crear
+  def rhoAux(p: Double, dist: Distribution): Double = {
+    0.0
+  }
+
+  def rhoCMT_Gen(alpha: Double, beta: Double): MedidaPol = {
+    (dist: Distribution) => {
+
+      val curvaPolarizacion: Double => Double = (p: Double) => rhoAux(p, dist)
+      val pOptimo = min_p(curvaPolarizacion, 0.0, 1.0, 0.0001)
+
+      rhoAux(pOptimo, dist)
+    }
+  }
 }
