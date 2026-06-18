@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="simulador_polarizacion,simulador_polarizacion.main,simulador_polarizacion.test" />
+    <profile name="sbt 1" modules="simulador_polarizacion,simulador_polarizacion.main,simulador_polarizacion.main~1,simulador_polarizacion.test,simulador_polarizacion.test~1" />
   </component>
 </project>
