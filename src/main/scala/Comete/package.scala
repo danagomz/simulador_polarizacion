@@ -51,4 +51,21 @@ package object Comete {
       rhoAux(pOpt)
     }
   }
+
+  def normalizar(m: MedidaPol): MedidaPol = {
+    (dist: Distribution) => {
+      val (_, y) = dist 
+      
+      val piPeorCaso: Frequency = Vector.tabulate(y.length) { i =>
+        if (i == 0 || i == y.length - 1) 0.5 else 0.0
+      }
+
+      val peorCaso = m((piPeorCaso, y)) 
+      val resultado = m(dist) 
+
+      if (peorCaso == 0.0) 0.0 
+      else resultado / peorCaso
+    }
+  }
+  
 }

@@ -77,3 +77,22 @@ assert(rExtremo > 0.0)
 
 
 // ---- SECCIÓN INTEGRANTE D --------------------------------
+
+println("=== Pruebas normalizar ===")
+
+val cmt1norm = normalizar(rhoCMT_Gen(1.2, 1.2))
+
+// Caso 1: máxima polarización → esperado 1.0
+val dNorm1 = cmt1norm((Vector(0.5, 0.0, 0.0, 0.0, 0.5), likert5))
+println(s"dNorm1 = $dNorm1")
+assert(math.abs(dNorm1 - 1.0) < 0.001, s"Esperado ~1.0, obtenido $dNorm1")
+
+// Caso 2: toda la masa en el centro → esperado 0.0
+val dNorm2 = cmt1norm((Vector(0.0, 0.0, 1.0, 0.0, 0.0), likert5))
+println(s"dNorm2 = $dNorm2")
+assert(math.abs(dNorm2 - 0.0) < 0.001, s"Esperado ~0.0, obtenido $dNorm2")
+
+// Caso 3: distribución asimétrica → esperado ~0.863
+val dNorm3 = cmt1norm((Vector(0.4, 0.0, 0.0, 0.0, 0.6), likert5))
+println(s"dNorm3 = $dNorm3")
+assert(math.abs(dNorm3 - 0.863) < 0.01, s"Esperado ~0.863, obtenido $dNorm3")
