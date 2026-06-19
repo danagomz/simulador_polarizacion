@@ -39,26 +39,16 @@ package object Comete {
     }.sum
   }
 
-  // Wrapper para conservar compatibilidad con rhoCMT_Gen
-  def rhoAux(alpha: Double, beta: Double)
-            (p: Double, dist: Distribution): Double = {
-
-    val (pi, y) = dist
-    rhoAuxValue(alpha, beta, pi, y, p)
-  }
-
-
-  // Seccion Integrante C - Borrador
-
   def rhoCMT_Gen(alpha: Double, beta: Double): MedidaPol = {
     (dist: Distribution) => {
+      val (pi, y) = dist
 
-      val curvaPolarizacion: Double => Double =
-        (p: Double) => rhoAux(alpha, beta)(p, dist)
+      val rhoAux: Double => Double =
+        (p: Double) => rhoAuxValue(alpha, beta, pi, y, p)
 
-      val pOptimo = min_p(curvaPolarizacion, 0.0, 1.0, 0.0001)
+      val pOpt = min_p(rhoAux, 0.0, 1.0, 0.0001)
 
-      rhoAux(alpha, beta)(pOptimo, dist)
+      rhoAux(pOpt)
     }
   }
 }
