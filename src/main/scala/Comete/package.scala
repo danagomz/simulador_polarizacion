@@ -67,5 +67,34 @@ package object Comete {
       else resultado / peorCaso
     }
   }
-  
+
+  // ============================================================
+  // SECCION INTEGRANTE A - FASE 2
+  // ============================================================
+
+
+
+
+  // SECCIÓN INTEGRANTE B — FASE 2
+  def calcularCajones(dist: DistributionValues): Vector[(Double, Double)] = {
+    val k = dist.length
+
+    Vector.tabulate(k) { i =>
+      val lo =
+        if (i == 0) 0.0
+        else (dist(i - 1) + dist(i)) / 2.0
+
+      val hi =
+        if (i == k - 1) 1.0
+        else (dist(i) + dist(i + 1)) / 2.0
+
+      (lo, hi)
+    }
+  }
+
+
+
+
+
+
 }
