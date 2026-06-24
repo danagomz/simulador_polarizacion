@@ -26,6 +26,72 @@ val testMinP = min_p(x => x * x, -1.0, 1.0, 0.0001)
 println(s"testMinP = $testMinP")
 assert(math.abs(testMinP) < 0.0001)
 
+println("=== Pruebas Fase 2 - Subtarea A ===")
+
+// ----------------------------------------------------
+// uniformBelief
+// ----------------------------------------------------
+val u = uniformBelief(5)
+
+println(s"uniformBelief(5) = $u")
+
+assert(u == Vector(0.2, 0.4, 0.6, 0.8, 1.0))
+
+// ----------------------------------------------------
+// allExtremeBelief
+// ----------------------------------------------------
+val e = allExtremeBelief(6)
+
+println(s"allExtremeBelief(6) = $e")
+
+assert(e == Vector(0.0, 0.0, 0.0, 1.0, 1.0, 1.0))
+
+// ----------------------------------------------------
+// midlyBelief
+// ----------------------------------------------------
+val m = midlyBelief(6)
+
+println(s"midlyBelief(6) = $m")
+
+assert(m.length == 6)
+assert(m.forall(x => x >= 0.0 && x <= 1.0))
+
+// ----------------------------------------------------
+// allTripleBelief
+// ----------------------------------------------------
+val t = allTripleBelief(9)
+
+println(s"allTripleBelief(9) = $t")
+
+assert(
+  t ==
+    Vector(
+      0.0, 0.0, 0.0,
+      0.5, 0.5, 0.5,
+      1.0, 1.0, 1.0
+    )
+)
+
+// ----------------------------------------------------
+// consensusBelief
+// ----------------------------------------------------
+val c = consensusBelief(0.42)(5)
+
+println(s"consensusBelief(0.42)(5) = $c")
+
+assert(
+  c ==
+    Vector(
+      0.42,
+      0.42,
+      0.42,
+      0.42,
+      0.42
+    )
+)
+
+println("Todas las pruebas de la Fase 2 -Subtarea A pasaron correctamente.")
+
 
 // ---- SECCIÓN INTEGRANTE B --------------------------------
 
