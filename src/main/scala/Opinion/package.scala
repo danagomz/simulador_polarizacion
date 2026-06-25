@@ -1,3 +1,5 @@
+
+
 package object Opinion {
 
   type SpecificBelief = Vector[Double]
@@ -39,4 +41,19 @@ package object Opinion {
   def consensusBelief(b: Double)(nags: Int): SpecificBelief =
     Vector.tabulate(nags)(_ => b)
 
+  def calcularCajones(dist: Comete.DistributionValues): Vector[(Double, Double)] = {
+    val k = dist.length
+
+    Vector.tabulate(k) { i =>
+      val lo =
+        if (i == 0) 0.0
+        else (dist(i - 1) + dist(i)) / 2.0
+
+      val hi =
+        if (i == k - 1) 1.0
+        else (dist(i) + dist(i + 1)) / 2.0
+
+      (lo, hi)
+    }
+  }
 }
