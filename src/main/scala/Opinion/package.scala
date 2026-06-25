@@ -80,4 +80,13 @@ package object Opinion {
     }
   }
 
+  def showWeightedGraph(swg: SpecificWeightedGraph): IndexedSeq[IndexedSeq[Double]] = {
+    val (influencia, n) = swg
+    Vector.tabulate(n) { i =>
+      Vector.tabulate(n) { j =>
+        influencia(i, j)
+      }
+    }
+  }
+
 }
