@@ -108,10 +108,24 @@ package object Opinion {
       }
     }
   }
-///ESPACIO FUNCIONES FALTANTES B Y C
 
+  def nuevaCreencia(
+                     i: Int,
+                     sb: SpecificBelief,
+                     swg: SpecificWeightedGraph
+                   ): Double = {
+    val (influencia, n) = swg
+    val bi = sb(i)
 
+    val vecinos: Seq[Int] =
+      (0 until n).filter(j => influencia(j, i) > 0.0)
 
+    if (vecinos.isEmpty) bi
+    else {
+      val suma = vecinos.map(j => contribucion(i, j, sb, influencia)).sum
+      bi + suma / vecinos.length.toDouble
+    }
+  }
 
   def simulate(
                 fu: FunctionUpdate,
@@ -122,4 +136,10 @@ package object Opinion {
     Vector.iterate(b0, t + 1)(b => fu(b, swg))
 
   }
+
+
+  //ESPACIO FUNCION C
+
+
+
 }
