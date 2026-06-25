@@ -138,6 +138,21 @@ val rExtremo = rhoAuxValue(
 println(s"rExtremo = $rExtremo")
 assert(rExtremo > 0.0)
 
+println("=== Pruebas calcularCajones ===")
+
+val cajones = calcularCajones(Vector(0.0, 0.25, 0.5, 0.75, 1.0))
+
+val cajonesEsperados = Vector(
+  (0.0, 0.125),
+  (0.125, 0.375),
+  (0.375, 0.625),
+  (0.625, 0.875),
+  (0.875, 1.0)
+)
+
+println(s"cajones = $cajones")
+assert(cajones == cajonesEsperados)
+
 
 // ---- SECCIÓN INTEGRANTE C --------------------------------
 

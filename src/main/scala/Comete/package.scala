@@ -25,7 +25,7 @@ package object Comete {
         min_p(f, m1, max, prec) // descartar tercio izquierdo
     }
   }
-  
+
   def rhoAuxValue(
                    alpha: Double,
                    beta: Double,
@@ -54,18 +54,18 @@ package object Comete {
 
   def normalizar(m: MedidaPol): MedidaPol = {
     (dist: Distribution) => {
-      val (_, y) = dist 
-      
+      val (_, y) = dist
+
       val piPeorCaso: Frequency = Vector.tabulate(y.length) { i =>
         if (i == 0 || i == y.length - 1) 0.5 else 0.0
       }
 
-      val peorCaso = m((piPeorCaso, y)) 
-      val resultado = m(dist) 
+      val peorCaso = m((piPeorCaso, y))
+      val resultado = m(dist)
 
-      if (peorCaso == 0.0) 0.0 
+      if (peorCaso == 0.0) 0.0
       else resultado / peorCaso
     }
   }
-  
+
 }
