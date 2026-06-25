@@ -1,10 +1,11 @@
-
-
 package object Opinion {
 
   type SpecificBelief = Vector[Double]
   type GenericBelief = Int => SpecificBelief
-
+  type WeightedGraph = (Int, Int) => Double
+  type SpecificWeightedGraph = (WeightedGraph, Int)
+  type GenericWeightedGraph = Int => SpecificWeightedGraph
+  type FunctionUpdate = (SpecificBelief, SpecificWeightedGraph) => SpecificBelief
   type AgentsPolMeasure =
     (SpecificBelief, Comete.DistributionValues) => Double
 
@@ -17,13 +18,13 @@ package object Opinion {
   }
 
   def midlyBelief(nags: Int): SpecificBelief = {
-    val mid = nags / 2
+    val middle = nags / 2
 
     Vector.tabulate(nags) { i =>
-      if (i < mid)
-        math.max(0.25 - 0.01 * (mid - i - 1), 0.0)
+      if (i < middle)
+        math.max(0.25 - 0.01 * (middle - i - 1), 0.0)
       else
-        math.min(0.75 + 0.01 * (i - mid), 1.0)
+        math.min(0.75 + 0.01 * (i - middle), 1.0)
     }
   }
 
@@ -56,4 +57,27 @@ package object Opinion {
       (lo, hi)
     }
   }
+
+  def rho(alpha: Double, beta: Double): AgentsPolMeasure = {
+    val medida = Comete.normalizar(Comete.rhoCMT_Gen(alpha, beta))
+
+    (sb: SpecificBelief, dist: Comete.DistributionValues) => {
+      val n = sb.length.toDouble
+      val k = dist.length
+      val cajones = calcularCajones(dist)
+
+      val frecuencias: Comete.Frequency = Vector.tabulate(k) { i =>
+        val (lo, hi) = cajones(i)
+        val count =
+          if (i == k - 1)
+            sb.count(op => op >= lo && op <= hi)
+          else
+            sb.count(op => op >= lo && op < hi)
+        count.toDouble / n
+      }
+
+      medida((frecuencias, dist))
+    }
+  }
+
 }
