@@ -108,5 +108,18 @@ package object Opinion {
       }
     }
   }
+///ESPACIO FUNCIONES FALTANTES B Y C
 
+
+
+
+  def simulate(
+                fu: FunctionUpdate,
+                swg: SpecificWeightedGraph,
+                b0: SpecificBelief,
+                t: Int
+              ): IndexedSeq[SpecificBelief] = {
+    Vector.iterate(b0, t + 1)(b => fu(b, swg))
+
+  }
 }
