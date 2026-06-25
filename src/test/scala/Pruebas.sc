@@ -3,8 +3,9 @@
 // REGLA: cada integrante solo edita su sección
 // ============================================================
 
-import Comete._
 import Opinion._
+
+import Comete._
 
 // ---- SECCIÓN INTEGRANTE A --------------------------------
 
@@ -92,6 +93,139 @@ assert(
 
 println("Todas las pruebas de la Fase 2 -Subtarea A pasaron correctamente.")
 
+// ----------------------------------------------------
+// FASE 3 - SUBTAREA A
+// betaFactor y contribucion
+// ----------------------------------------------------
+
+println("=== Pruebas Fase 3 - Subtarea A ===")
+
+// ----------------------------------------------------
+// betaFactor
+// ----------------------------------------------------
+
+val beta1 = betaFactor(0.5, 0.5)
+println(s"betaFactor(0.5, 0.5) = $beta1")
+assert(beta1 == 1.0)
+
+val beta2 = betaFactor(0.0, 1.0)
+println(s"betaFactor(0.0, 1.0) = $beta2")
+assert(beta2 == 0.0)
+
+val beta3 = betaFactor(0.2, 0.7)
+println(s"betaFactor(0.2, 0.7) = $beta3")
+assert(math.abs(beta3 - 0.5) < 0.0001)
+
+val beta4 = betaFactor(0.3, 0.4)
+println(s"betaFactor(0.3, 0.4) = $beta4")
+assert(math.abs(beta4 - 0.9) < 0.0001)
+
+
+// ----------------------------------------------------
+// Grafo simple de prueba:
+// toda influencia vale 1
+// ----------------------------------------------------
+
+val influencia: WeightedGraph =
+  (_, _) => 1.0
+
+
+// ----------------------------------------------------
+// contribucion: caso normal
+// ----------------------------------------------------
+
+val sb1 = Vector(
+  0.2,
+  0.7
+)
+
+val c1 = contribucion(
+  i = 0,
+  j = 1,
+  sb1,
+  influencia
+)
+
+println(s"contribucion(0,1) = $c1")
+
+// β = 0.5
+// I = 1
+// (bj-bi) = 0.5
+// resultado = 0.25
+
+assert(math.abs(c1 - 0.25) < 0.0001)
+
+
+// ----------------------------------------------------
+// contribucion: opiniones idénticas
+// ----------------------------------------------------
+
+val sb2 = Vector(
+  0.5,
+  0.5
+)
+
+val c2 = contribucion(
+  i = 0,
+  j = 1,
+  sb2,
+  influencia
+)
+
+println(s"contribucion iguales = $c2")
+
+assert(math.abs(c2) < 0.0001)
+
+
+// ----------------------------------------------------
+// contribucion: opiniones opuestas
+// ----------------------------------------------------
+
+val sb3 = Vector(
+  0.0,
+  1.0
+)
+
+val c3 = contribucion(
+  i = 0,
+  j = 1,
+  sb3,
+  influencia
+)
+
+println(s"contribucion opuestas = $c3")
+
+// β = 0
+// resultado = 0
+
+assert(math.abs(c3) < 0.0001)
+
+
+// ----------------------------------------------------
+// contribucion negativa
+// ----------------------------------------------------
+
+val sb4 = Vector(
+  0.8,
+  0.2
+)
+
+val c4 = contribucion(
+  i = 0,
+  j = 1,
+  sb4,
+  influencia
+)
+
+println(s"contribucion negativa = $c4")
+
+// β = 0.4
+// (bj-bi) = -0.6
+// resultado = -0.24
+
+assert(math.abs(c4 + 0.24) < 0.0001)
+
+println("Todas las pruebas de Fase 3 - Subtarea A pasaron correctamente.")
 
 // ---- SECCIÓN INTEGRANTE B --------------------------------
 

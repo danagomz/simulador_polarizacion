@@ -42,6 +42,26 @@ package object Opinion {
   def consensusBelief(b: Double)(nags: Int): SpecificBelief =
     Vector.tabulate(nags)(_ => b)
 
+  def betaFactor(bi: Double, bj: Double): Double =
+    1.0 - math.abs(bj - bi)
+
+  def contribucion(
+                    i: Int,
+                    j: Int,
+                    sb: SpecificBelief,
+                    influencia: WeightedGraph
+                  ): Double = {
+
+    val bi = sb(i)
+    val bj = sb(j)
+
+    val Iji = influencia(j, i)
+
+    val beta_ij = betaFactor(bi, bj)
+
+    beta_ij * Iji * (bj - bi)
+  }
+
   def calcularCajones(dist: Comete.DistributionValues): Vector[(Double, Double)] = {
     val k = dist.length
 
