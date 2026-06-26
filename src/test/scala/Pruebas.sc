@@ -3,9 +3,8 @@
 // REGLA: cada integrante solo edita su sección
 // ============================================================
 
-import Opinion._
-
 import Comete._
+import Opinion._
 
 // ---- SECCIÓN INTEGRANTE A --------------------------------
 
@@ -286,6 +285,57 @@ val cajonesEsperados = Vector(
 
 println(s"cajones = $cajones")
 assert(cajones == cajonesEsperados)
+
+// ----------------------------------------------------
+// FASE 3 - SUBTAREA B
+// nuevaCreencia
+// ----------------------------------------------------
+
+println("=== Pruebas Fase 3 - Subtarea B ===")
+
+// Caso 1: solo auto-influencia => no cambia la creencia
+val swgSoloAuto: SpecificWeightedGraph =
+  ((i: Int, j: Int) => if (i == j) 1.0 else 0.0, 2)
+
+val sbBase1 = Vector(0.2, 0.7)
+
+val nc1 = nuevaCreencia(0, sbBase1, swgSoloAuto)
+println(s"nuevaCreencia(0, sbBase1, swgSoloAuto) = $nc1")
+assert(math.abs(nc1 - 0.2) < 0.0001)
+
+val nc2 = nuevaCreencia(1, sbBase1, swgSoloAuto)
+println(s"nuevaCreencia(1, sbBase1, swgSoloAuto) = $nc2")
+assert(math.abs(nc2 - 0.7) < 0.0001)
+
+// Caso 2: grafo completo con influencia 1 en todas partes
+val swgCompleto: SpecificWeightedGraph =
+  ((_: Int, _: Int) => 1.0, 2)
+
+// Para i = 0:
+// vecinos = {0,1}
+// contribución de 1 sobre 0 = 0.5 * 1 * (0.7 - 0.2) = 0.25
+// suma = 0.25
+// promedio = 0.25 / 2 = 0.125
+// nueva = 0.2 + 0.125 = 0.325
+val nc3 = nuevaCreencia(0, sbBase1, swgCompleto)
+println(s"nuevaCreencia(0, sbBase1, swgCompleto) = $nc3")
+assert(math.abs(nc3 - 0.325) < 0.0001)
+
+// Para i = 1:
+// contribución de 0 sobre 1 = 0.5 * 1 * (0.2 - 0.7) = -0.25
+// promedio = -0.25 / 2 = -0.125
+// nueva = 0.7 - 0.125 = 0.575
+val nc4 = nuevaCreencia(1, sbBase1, swgCompleto)
+println(s"nuevaCreencia(1, sbBase1, swgCompleto) = $nc4")
+assert(math.abs(nc4 - 0.575) < 0.0001)
+
+// Caso 3: consenso => no cambia nada
+val sbConsenso = Vector(0.5, 0.5)
+val nc5 = nuevaCreencia(0, sbConsenso, swgCompleto)
+println(s"nuevaCreencia consenso = $nc5")
+assert(math.abs(nc5 - 0.5) < 0.0001)
+
+println("Todas las pruebas de Fase 3 - Subtarea B pasaron correctamente.")
 
 
 // ---- SECCIÓN INTEGRANTE C --------------------------------
