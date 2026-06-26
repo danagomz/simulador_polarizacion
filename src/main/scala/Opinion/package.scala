@@ -24,7 +24,7 @@ package object Opinion {
       if (i < middle)
         math.max(0.25 - 0.01 * (middle - i - 1), 0.0)
       else
-        math.min(0.75 + 0.01 * (i - middle), 1.0)
+        math.min(0.75 - 0.01 * (middle - i), 1.0)
     }
   }
 
@@ -126,6 +126,11 @@ package object Opinion {
       bi + suma / vecinos.length.toDouble
     }
   }
+  def confBiasUpdate(sb: SpecificBelief, swg: SpecificWeightedGraph): SpecificBelief = {
+
+    val (_, n) = swg
+    Vector.tabulate(n)(i => nuevaCreencia(i, sb, swg))
+  }
 
   def simulate(
                 fu: FunctionUpdate,
@@ -136,10 +141,5 @@ package object Opinion {
     Vector.iterate(b0, t + 1)(b => fu(b, swg))
 
   }
-
-
-  //ESPACIO FUNCION C
-
-
 
 }
