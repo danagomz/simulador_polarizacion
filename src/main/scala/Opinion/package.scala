@@ -1,3 +1,5 @@
+import scala.collection.parallel.CollectionConverters._
+
 package object Opinion {
 
   type SpecificBelief = Vector[Double]
@@ -141,5 +143,37 @@ package object Opinion {
     Vector.iterate(b0, t + 1)(b => fu(b, swg))
 
   }
+
+  // FUNCION INTEGRANTE A
+
+
+  def confBiasUpdatePar(
+                         sb: SpecificBelief,
+                         swg: SpecificWeightedGraph
+                       ): SpecificBelief = {
+    val (influencia, n) = swg
+
+    (0 until n).par.map { i =>
+      val bi = sb(i)
+
+      val vecinos = (0 until n).filter(j => influencia(j, i) > 0.0)
+
+      if (vecinos.isEmpty) bi
+      else {
+        val suma = vecinos.par.map { j =>
+          val bj = sb(j)
+          val Iji = influencia(j, i)
+          val beta_ij = 1.0 - math.abs(bj - bi)
+          beta_ij * Iji * (bj - bi)
+        }.sum
+
+        bi + suma / vecinos.length.toDouble
+      }
+    }.toVector
+  }
+
+
+  //FUNCIONES RESTANTES
+
 
 }
