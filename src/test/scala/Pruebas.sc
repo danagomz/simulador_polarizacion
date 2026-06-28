@@ -286,6 +286,38 @@ val cajonesEsperados = Vector(
 println(s"cajones = $cajones")
 assert(cajones == cajonesEsperados)
 
+println("=== Pruebas rhoPar ===")
+
+val dist = Vector(0.0, 0.5, 1.0)
+
+val sb = Vector(
+  0.1,
+  0.2,
+  0.4,
+  0.6,
+  0.8,
+  1.0
+)
+
+val rSec = rho(1.2, 1.2)(sb, dist)
+val rPar = rhoPar(1.2, 1.2)(sb, dist)
+
+println(s"rho    = $rSec")
+println(s"rhoPar = $rPar")
+
+assert(math.abs(rSec - rPar) < 1e-10)
+
+println("rhoPar produce el mismo resultado que rho.")
+
+val sbGrande = uniformBelief(100000)
+
+val r1 = rho(1.2, 1.2)(sbGrande, dist)
+val r2 = rhoPar(1.2, 1.2)(sbGrande, dist)
+
+assert(math.abs(r1 - r2) < 1e-10)
+
+println("Prueba con 10000 agentes superada.")
+
 // ----------------------------------------------------
 // FASE 3 - SUBTAREA B
 // nuevaCreencia

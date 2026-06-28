@@ -1,5 +1,5 @@
 package object Opinion {
-
+  import scala.collection.parallel.CollectionConverters._
   type SpecificBelief = Vector[Double]
   type GenericBelief = Int => SpecificBelief
   type WeightedGraph = (Int, Int) => Double
@@ -93,6 +93,31 @@ package object Opinion {
             sb.count(op => op >= lo && op <= hi)
           else
             sb.count(op => op >= lo && op < hi)
+        count.toDouble / n
+      }
+
+      medida((frecuencias, dist))
+    }
+  }
+
+  def rhoPar(alpha: Double, beta: Double): AgentsPolMeasure = {
+    val medida = Comete.normalizar(Comete.rhoCMT_Gen(alpha, beta))
+
+    (sb: SpecificBelief, dist: Comete.DistributionValues) => {
+
+      val n = sb.length.toDouble
+      val k = dist.length
+      val cajones = calcularCajones(dist)
+
+      val frecuencias: Comete.Frequency = Vector.tabulate(k) { i =>
+        val (lo, hi) = cajones(i)
+
+        val count =
+          if (i == k - 1)
+            sb.par.count(op => op >= lo && op <= hi)
+          else
+            sb.par.count(op => op >= lo && op < hi)
+
         count.toDouble / n
       }
 
