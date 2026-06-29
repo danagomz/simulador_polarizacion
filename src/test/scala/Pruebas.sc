@@ -376,7 +376,7 @@ println("Todas las pruebas de Fase 3 - Subtarea B pasaron correctamente.")
 
 println("=== Pruebas Fase 4 - Subtarea B ===")
 
-// Caso 1: solo auto-influencia => debe coincidir con la secuencial
+// Caso 1: solo auto-influencia => no cambia la creencia
 val par1 = confBiasUpdatePar(sbBase1, swgSoloAuto)
 println(s"confBiasUpdatePar(solo auto) = $par1")
 assert(par1 == Vector(0.2, 0.7))
@@ -392,14 +392,31 @@ val par3 = confBiasUpdatePar(sbConsenso, swgCompleto)
 println(s"confBiasUpdatePar(consenso) = $par3")
 assert(par3 == Vector(0.5, 0.5))
 
-// Caso 4: debe dar exactamente lo mismo que la versión secuencial
+// Caso 4: comparación directa con la versión secuencial
 val seq4 = confBiasUpdate(sbBase1, swgCompleto)
 val par4 = confBiasUpdatePar(sbBase1, swgCompleto)
 
 println(s"seq4 = $seq4")
 println(s"par4 = $par4")
-
 assert(seq4 == par4)
+
+println("=== Prueba adicional con i1(10) equivalente a la guía ===")
+
+val i1Local: WeightedGraph =
+  (i: Int, j: Int) =>
+    if (i == j) 1.0
+    else if (i < j) 1.0 / (j - i).toDouble
+    else 0.0
+
+val swgI1: SpecificWeightedGraph = (i1Local, 10)
+val sbu10 = uniformBelief(10)
+
+val seqI1 = confBiasUpdate(sbu10, swgI1)
+val parI1 = confBiasUpdatePar(sbu10, swgI1)
+
+println(s"seqI1 = $seqI1")
+println(s"parI1 = $parI1")
+assert(seqI1 == parI1)
 
 println("Todas las pruebas de Fase 4 - Subtarea B pasaron correctamente.")
 
