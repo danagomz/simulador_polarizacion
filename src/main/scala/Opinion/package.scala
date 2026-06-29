@@ -1,7 +1,7 @@
-import scala.collection.parallel.CollectionConverters._
-
 package object Opinion {
   import scala.collection.parallel.CollectionConverters._
+  import common._
+
   type SpecificBelief = Vector[Double]
   type GenericBelief = Int => SpecificBelief
   type WeightedGraph = (Int, Int) => Double
@@ -56,9 +56,7 @@ package object Opinion {
 
     val bi = sb(i)
     val bj = sb(j)
-
     val Iji = influencia(j, i)
-
     val beta_ij = betaFactor(bi, bj)
 
     beta_ij * Iji * (bj - bi)
@@ -95,6 +93,7 @@ package object Opinion {
             sb.count(op => op >= lo && op <= hi)
           else
             sb.count(op => op >= lo && op < hi)
+
         count.toDouble / n
       }
 
@@ -106,7 +105,6 @@ package object Opinion {
     val medida = Comete.normalizar(Comete.rhoCMT_Gen(alpha, beta))
 
     (sb: SpecificBelief, dist: Comete.DistributionValues) => {
-
       val n = sb.length.toDouble
       val k = dist.length
       val cajones = calcularCajones(dist)
@@ -153,8 +151,8 @@ package object Opinion {
       bi + suma / vecinos.length.toDouble
     }
   }
-  def confBiasUpdate(sb: SpecificBelief, swg: SpecificWeightedGraph): SpecificBelief = {
 
+  def confBiasUpdate(sb: SpecificBelief, swg: SpecificWeightedGraph): SpecificBelief = {
     val (_, n) = swg
     Vector.tabulate(n)(i => nuevaCreencia(i, sb, swg))
   }
@@ -166,11 +164,7 @@ package object Opinion {
                 t: Int
               ): IndexedSeq[SpecificBelief] = {
     Vector.iterate(b0, t + 1)(b => fu(b, swg))
-
   }
-
-  // FUNCION INTEGRANTE A
-
 
   def confBiasUpdatePar(
                          sb: SpecificBelief,
@@ -178,27 +172,47 @@ package object Opinion {
                        ): SpecificBelief = {
     val (influencia, n) = swg
 
-    (0 until n).par.map { i =>
-      val bi = sb(i)
+    def sumaVecinosPar(i: Int, vecinos: IndexedSeq[Int]): Double = {
+      if (vecinos.isEmpty) 0.0
+      else if (vecinos.length <= 32) {
+        vecinos.map(j => contribucion(i, j, sb, influencia)).sum
+      } else {
+        val mid = vecinos.length / 2
+        val (izq, der) = vecinos.splitAt(mid)
 
-      val vecinos = (0 until n).filter(j => influencia(j, i) > 0.0)
+        val (sumaIzq, sumaDer) = parallel(
+          sumaVecinosPar(i, izq.toIndexedSeq),
+          sumaVecinosPar(i, der.toIndexedSeq)
+        )
 
-      if (vecinos.isEmpty) bi
-      else {
-        val suma = vecinos.par.map { j =>
-          val bj = sb(j)
-          val Iji = influencia(j, i)
-          val beta_ij = 1.0 - math.abs(bj - bi)
-          beta_ij * Iji * (bj - bi)
-        }.sum
-
-        bi + suma / vecinos.length.toDouble
+        sumaIzq + sumaDer
       }
-    }.toVector
+    }
+
+    def construir(desde: Int, hasta: Int): Vector[Double] = {
+      val len = hasta - desde
+
+      if (len <= 32) {
+        Vector.tabulate(len) { offset =>
+          val i = desde + offset
+          val bi = sb(i)
+          val vecinos = (0 until n).filter(j => influencia(j, i) > 0.0).toIndexedSeq
+
+          if (vecinos.isEmpty) bi
+          else bi + sumaVecinosPar(i, vecinos) / vecinos.length.toDouble
+        }
+      } else {
+        val medio = desde + len / 2
+
+        val (izq, der) = parallel(
+          construir(desde, medio),
+          construir(medio, hasta)
+        )
+
+        izq ++ der
+      }
+    }
+
+    construir(0, n)
   }
-
-
-  //FUNCIONES RESTANTES
-
-
 }
