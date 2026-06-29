@@ -369,6 +369,40 @@ assert(math.abs(nc5 - 0.5) < 0.0001)
 
 println("Todas las pruebas de Fase 3 - Subtarea B pasaron correctamente.")
 
+// ----------------------------------------------------
+// FASE 4 - SUBTAREA B
+// confBiasUpdatePar
+// ----------------------------------------------------
+
+println("=== Pruebas Fase 4 - Subtarea B ===")
+
+// Caso 1: solo auto-influencia => debe coincidir con la secuencial
+val par1 = confBiasUpdatePar(sbBase1, swgSoloAuto)
+println(s"confBiasUpdatePar(solo auto) = $par1")
+assert(par1 == Vector(0.2, 0.7))
+
+// Caso 2: grafo completo con influencia 1 en todas partes
+val par2 = confBiasUpdatePar(sbBase1, swgCompleto)
+println(s"confBiasUpdatePar(completo) = $par2")
+assert(math.abs(par2(0) - 0.325) < 0.0001)
+assert(math.abs(par2(1) - 0.575) < 0.0001)
+
+// Caso 3: consenso => no cambia nada
+val par3 = confBiasUpdatePar(sbConsenso, swgCompleto)
+println(s"confBiasUpdatePar(consenso) = $par3")
+assert(par3 == Vector(0.5, 0.5))
+
+// Caso 4: debe dar exactamente lo mismo que la versión secuencial
+val seq4 = confBiasUpdate(sbBase1, swgCompleto)
+val par4 = confBiasUpdatePar(sbBase1, swgCompleto)
+
+println(s"seq4 = $seq4")
+println(s"par4 = $par4")
+
+assert(seq4 == par4)
+
+println("Todas las pruebas de Fase 4 - Subtarea B pasaron correctamente.")
+
 
 // ---- SECCIÓN INTEGRANTE C --------------------------------
 
