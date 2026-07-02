@@ -3,7 +3,7 @@ package object Comete {
   type DistributionValues = Vector[Double]
   type Frequency = Vector[Double]
   type Distribution = (Frequency, DistributionValues)
-  type MedidaPol = Distribution => Double
+  type PolMeasure = Distribution => Double
 
   @annotation.tailrec
   def min_p(
@@ -39,7 +39,7 @@ package object Comete {
     }.sum
   }
 
-  def rhoCMT_Gen(alpha: Double, beta: Double): MedidaPol = {
+  def rhoCMT_Gen(alpha: Double, beta: Double): PolMeasure  = {
     (dist: Distribution) => {
       val (pi, y) = dist
 
@@ -52,7 +52,7 @@ package object Comete {
     }
   }
 
-  def normalizar(m: MedidaPol): MedidaPol = {
+  def normalizar(m: PolMeasure): PolMeasure  = {
     (dist: Distribution) => {
       val (_, y) = dist
 

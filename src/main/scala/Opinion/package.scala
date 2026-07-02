@@ -3,7 +3,7 @@ package object Opinion {
   import common._
 
   type SpecificBelief = Vector[Double]
-  type GenericBelief = Int => SpecificBelief
+  type GenericBeliefConf = Int => SpecificBelief
   type WeightedGraph = (Int, Int) => Double
   type SpecificWeightedGraph = (WeightedGraph, Int)
   type GenericWeightedGraph = Int => SpecificWeightedGraph
