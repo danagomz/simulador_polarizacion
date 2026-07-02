@@ -133,28 +133,35 @@ package object Opinion {
       }
     }
   }
+  def vecindades(swg: SpecificWeightedGraph): Vector[Vector[Int]] = {
+    val (influencia, n) = swg
+    Vector.tabulate(n)(i => (0 until n).filter(j => influencia(j, i) > 0.0).toVector)
+  }
+
 
   def nuevaCreencia(
                      i: Int,
                      sb: SpecificBelief,
-                     swg: SpecificWeightedGraph
+                     influencia: WeightedGraph,
+                     vecinos: Vector[Int]
                    ): Double = {
-    val (influencia, n) = swg
     val bi = sb(i)
-
-    val vecinos: Seq[Int] =
-      (0 until n).filter(j => influencia(j, i) > 0.0)
 
     if (vecinos.isEmpty) bi
     else {
-      val suma = vecinos.map(j => contribucion(i, j, sb, influencia)).sum
+      val suma = vecinos.map { j =>
+        contribucion(i, j, sb, influencia)
+      }.sum
+
       bi + suma / vecinos.length.toDouble
     }
   }
 
   def confBiasUpdate(sb: SpecificBelief, swg: SpecificWeightedGraph): SpecificBelief = {
-    val (_, n) = swg
-    Vector.tabulate(n)(i => nuevaCreencia(i, sb, swg))
+    val (influencia, n) = swg
+    val vecinos = vecindades(swg)
+
+    Vector.tabulate(n)(i => nuevaCreencia(i, sb, influencia, vecinos(i)))
   }
 
   def simulate(
@@ -212,7 +219,6 @@ package object Opinion {
         izq ++ der
       }
     }
-
     construir(0, n)
   }
 }
